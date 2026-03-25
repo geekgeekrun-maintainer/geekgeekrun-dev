@@ -10,6 +10,10 @@ import {
 } from '@geekgeekrun/utils'
 
 import { EventEmitter } from 'node:events'
+import puppeteerExtra from 'puppeteer-extra'
+import stealthPlugin from 'puppeteer-extra-plugin-stealth'
+import laodengPlugin from '@geekgeekrun/puppeteer-extra-plugin-laodeng'
+import anonymizeUaPlugin from 'puppeteer-extra-plugin-anonymize-ua'
 import { readStorageFile, writeStorageFile, ensureConfigFileExist, ensureStorageFileExist, readConfigFile } from './runtime-file-utils'
 import {
   calculateTotalCombinations,
@@ -41,6 +45,8 @@ import cityGroupData from './cityGroup'
 import { hasIntersection, type Interval } from '@geekgeekrun/utils/number';
 
 export { sleep, sleepWithRandomDelay }
+
+
 
 const flattedCityList = []
 ;(cityGroupData?.zpData?.cityGroup ?? []).forEach(it => {
@@ -284,18 +290,10 @@ const blockBossNotActive = new Set<string>()
 const blockJobNotSuit = new Set<string>()
 
 export async function initPuppeteer () {
-  const importResult = await Promise.all(
-    [
-      import('puppeteer-extra'),
-      import('puppeteer-extra-plugin-stealth'),
-      import('@geekgeekrun/puppeteer-extra-plugin-laodeng'),
-      import('puppeteer-extra-plugin-anonymize-ua')
-    ]
-  )
-  puppeteer = importResult[0].default
-  StealthPlugin = importResult[1].default
-  LaodengPlugin = importResult[2].default
-  AnonymizeUaPlugin = importResult[3].default
+  puppeteer = puppeteerExtra
+  StealthPlugin = stealthPlugin
+  LaodengPlugin = laodengPlugin
+  AnonymizeUaPlugin = anonymizeUaPlugin
   // 确保 LaodengPlugin 是一个函数
   if (typeof LaodengPlugin !== 'function') {
     // 尝试从默认导出中获取函数

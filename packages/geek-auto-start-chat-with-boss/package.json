@@ -7,49 +7,50 @@
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
     "./runtime-file-utils": {
       "require": "./dist/runtime-file-utils.js",
-      "import": "./dist/runtime-file-utils.js",
+      "import": "./dist/runtime-file-utils.mjs",
       "types": "./dist/runtime-file-utils.d.ts"
     },
     "./constant": {
       "require": "./dist/constant.js",
-      "import": "./dist/constant.js",
+      "import": "./dist/constant.mjs",
       "types": "./dist/constant.d.ts"
     },
     "./combineCalculator": {
       "require": "./dist/combineCalculator.js",
-      "import": "./dist/combineCalculator.js",
+      "import": "./dist/combineCalculator.mjs",
       "types": "./dist/combineCalculator.d.ts"
     },
     "./sage-time": {
       "require": "./dist/sage-time.js",
-      "import": "./dist/sage-time.js",
+      "import": "./dist/sage-time.mjs",
       "types": "./dist/sage-time.d.ts"
     },
     "./cityGroup": {
       "require": "./dist/cityGroup.js",
-      "import": "./dist/cityGroup.js",
+      "import": "./dist/cityGroup.mjs",
       "types": "./dist/cityGroup.d.ts"
     },
     "./internal-config/*": "./internal-config/*",
     "./default-config-file/*": "./default-config-file/*"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "tsup",
+    "dev": "tsup --watch"
   },
   "author": "geekgeekrun",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.6.2",
-    "@types/node": "^20.16.10"
+    "@types/node": "^20.16.10",
+    "tsup": "^8.5.0",
+    "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@geekgeekrun/utils": "workspace:*",
-    "@geekgeekrun/sqlite-plugin": "workspace:*"
+    "@geekgeekrun/sqlite-plugin": "workspace:*",
+    "@geekgeekrun/utils": "workspace:*"
   }
 }
