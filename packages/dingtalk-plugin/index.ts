@@ -1,17 +1,20 @@
-import { requestDingtalkNotify, createTextMessage } from './service.mjs'
+import { requestDingtalkNotify, createTextMessage } from './service'
 import dayjs from 'dayjs'
 
-let sendQueueTimer = 0
-let collectedMessageList = []
+let sendQueueTimer: NodeJS.Timeout = 0 as unknown as NodeJS.Timeout
+let collectedMessageList: any[] = []
 
-export default class DingtalkPlugin {
-  constructor (dingtalkAccessToken) {
+class DingtalkPlugin {
+  private dingtalkAccessToken: string
+
+  constructor(dingtalkAccessToken: string) {
     this.dingtalkAccessToken = dingtalkAccessToken
   }
-  setSendQueueTimer () {
+
+  private setSendQueueTimer() {
     const _this = this
     const interval = 2 * 60 * 1000
-    function sendMergedMessage () {
+    function sendMergedMessage() {
       if (collectedMessageList.length === 0) {
       } else if (collectedMessageList.length === 1) {
         collectedMessageList[0].dingtalkRequestBody.text.content += `\n${dayjs(collectedMessageList[0].insertedTime).format('MM-DD HH:mm:ss')}\n\n【geekgeekrun】`
@@ -32,10 +35,9 @@ export default class DingtalkPlugin {
         }, () => void 0)
       }
       collectedMessageList.length = 0
-      sendQueueTimer = setTimeout(sendMergedMessage, interval)
+      sendQueueTimer = setTimeout(sendMergedMessage, interval) as unknown as NodeJS.Timeout
     }
-    sendQueueTimer = setTimeout(sendMergedMessage, interval)
-    // FIXME: exit immediate without wait
+    sendQueueTimer = setTimeout(sendMergedMessage, interval) as unknown as NodeJS.Timeout
     process.on('SIGINT', () => {
       sendMergedMessage()
       setTimeout(() => {
@@ -43,10 +45,12 @@ export default class DingtalkPlugin {
       }, 5000)
     })
   }
-  destroySendQueueTimer () {
+
+  private destroySendQueueTimer() {
     clearTimeout(sendQueueTimer)
   }
-  apply (hooks) {
+
+  apply(hooks: any) {
     if (!this.dingtalkAccessToken) {
       console.log(`[DingtalkPlugin] AccessToken is empty, which makes the plugin won't do anything.`)
       return
@@ -55,13 +59,13 @@ export default class DingtalkPlugin {
     this.setSendQueueTimer()
     hooks.errorEncounter.tap(
       'DingtalkPlugin',
-      (errorInfo) => {
+      (errorInfo: any) => {
         collectedMessageList.push(createTextMessage(errorInfo))
       }
     )
     hooks.newChatStartup.tap(
       'DingtalkPlugin',
-      ({jobInfo, bossInfo}) => {
+      ({jobInfo, bossInfo}: any) => {
         collectedMessageList.push(createTextMessage(
           `${bossInfo.brandName} ${bossInfo.name}
 ${jobInfo.jobName} ${jobInfo.salaryDesc}
@@ -71,3 +75,6 @@ Chat has startup!`
     )
   }
 }
+
+export { DingtalkPlugin }
+export default DingtalkPlugin

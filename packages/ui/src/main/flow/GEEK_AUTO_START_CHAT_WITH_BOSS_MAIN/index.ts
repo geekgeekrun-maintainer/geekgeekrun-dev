@@ -1,12 +1,12 @@
-import DingtalkPlugin from '@geekgeekrun/dingtalk-plugin/index.mjs'
+import { DingtalkPlugin } from '@geekgeekrun/dingtalk-plugin'
 import { app, dialog } from 'electron'
 import { SyncHook, AsyncSeriesHook } from 'tapable'
 import {
   readConfigFile,
   getPublicDbFilePath
-} from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils.mjs'
+} from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils'
 // import { pipeWriteRegardlessError } from '../utils/pipe'
-import { sleep } from '@geekgeekrun/utils/sleep.mjs'
+import { sleep } from '@geekgeekrun/utils'
 import { AUTO_CHAT_ERROR_EXIT_CODE } from '../../../common/enums/auto-start-chat'
 import attachListenerForKillSelfOnParentExited from '../../utils/attachListenerForKillSelfOnParentExited'
 import minimist from 'minimist'
@@ -22,6 +22,7 @@ import { getLastUsedAndAvailableBrowser } from '../DOWNLOAD_DEPENDENCIES/utils/b
 import { configWithBrowserAssistant } from '../../features/config-with-browser-assistant'
 const { default: SqlitePlugin } = SqlitePluginModule
 
+debugger
 process.on('SIGTERM', () => {
   console.log('收到SIGTERM信号，正在退出')
   process.exit(0)
@@ -91,7 +92,7 @@ const runAutoChat = async () => {
   })
   process.env.PUPPETEER_EXECUTABLE_PATH = puppeteerExecutable.executablePath
   const { initPuppeteer, mainLoop, closeBrowserWindow, autoStartChatEventBus } = await import(
-    '@geekgeekrun/geek-auto-start-chat-with-boss/index.mjs'
+    '@geekgeekrun/geek-auto-start-chat-with-boss'
   )
   process.on('disconnect', () => {
     closeBrowserWindow()

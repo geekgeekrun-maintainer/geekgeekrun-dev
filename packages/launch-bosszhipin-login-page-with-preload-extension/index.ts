@@ -1,31 +1,27 @@
-
 import {
   initPuppeteer
-} from '@geekgeekrun/geek-auto-start-chat-with-boss/index.mjs'
+} from '@geekgeekrun/geek-auto-start-chat-with-boss'
 import {
   sleep,
   sleepWithRandomDelay
-} from '@geekgeekrun/utils/sleep.mjs'
-import { blockNavigation } from '@geekgeekrun/utils/puppeteer/block-navigation.mjs'
+} from '@geekgeekrun/utils'
+import { blockNavigation } from '@geekgeekrun/utils/puppeteer/block-navigation'
 import {
   writeStorageFile
-} from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils.mjs'
+} from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils'
 
 import JSON5 from 'json5'
-import url from 'url';
 import {
   runtimeFolderPath,
   ensureEditThisCookie,
   editThisCookieExtensionPath,
-} from './utils.mjs'
+} from './utils'
 
 import { EventEmitter } from 'node:events'
 
 export const loginEventBus = new EventEmitter()
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
-
-export async function main() {
+export async function main(): Promise<void> {
   await ensureEditThisCookie()
   const { puppeteer } = await initPuppeteer()
   const browser = await puppeteer.launch({

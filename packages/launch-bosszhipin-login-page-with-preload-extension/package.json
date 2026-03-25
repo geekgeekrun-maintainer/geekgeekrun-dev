@@ -3,11 +3,29 @@
   "private": true,
   "version": "1.0.0",
   "description": "launch-bosszhipin-login-page-with-preload-extension",
-  "module": "./index.mjs",
-  "type": "module",
-  "scripts": {},
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./utils": {
+      "require": "./dist/utils.js",
+      "import": "./dist/utils.js",
+      "types": "./dist/utils.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
   "author": "geekgeekrun",
   "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.6.2",
+    "@types/node": "^20.16.10"
+  },
   "dependencies": {
     "@geekgeekrun/geek-auto-start-chat-with-boss": "workspace:*",
     "@geekgeekrun/utils": "workspace:*",

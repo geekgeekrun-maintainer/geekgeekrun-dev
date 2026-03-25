@@ -1,8 +1,9 @@
-import path from 'node:path';
+import path from 'node:path'
 import fs from 'node:fs'
 import os from 'node:os'
 import extractZip from 'extract-zip'
-import packageJson from './package.json' assert {type: 'json'}
+
+import packageJson from './package.json'
 
 const isUiDev = process.env.NODE_ENV === 'development'
 
@@ -12,6 +13,7 @@ const extensionDir = path.join(
   runtimeFolderPath,
   'chrome-extensions'
 )
+
 if (!fs.existsSync(
   runtimeFolderPath
 )) {
@@ -22,8 +24,9 @@ if (!fs.existsSync(extensionDir)) {
 }
 export const editThisCookieExtensionPath = path.join(extensionDir, 'EditThisCookie')
 
-let editThisCookieZipPath
-async function getEditThisCookieZipPath () {
+let editThisCookieZipPath: string | undefined
+
+async function getEditThisCookieZipPath(): Promise<string> {
   if (editThisCookieZipPath) {
     return editThisCookieZipPath
   }
@@ -33,10 +36,11 @@ async function getEditThisCookieZipPath () {
 }
 
 const APP_GEEKGEEKRUN_EDIT_VERSION = 1
-export async function ensureEditThisCookie () {
+
+export async function ensureEditThisCookie(): Promise<void> {
   let isNeedExtractEditThisCookie = false
   const GEEKGEEKRUN_EDIT_VERSION_FILE_PATH = path.join(editThisCookieExtensionPath, 'GEEKGEEKRUN_EDIT_VERSION')
-  let geekgeekrunEditVersion
+  let geekgeekrunEditVersion: number
   try {
     const fileContent = fs.readFileSync(GEEKGEEKRUN_EDIT_VERSION_FILE_PATH, { encoding: 'utf-8' })
     geekgeekrunEditVersion = Number(fileContent) || 0
@@ -44,9 +48,11 @@ export async function ensureEditThisCookie () {
   catch (err) {
     geekgeekrunEditVersion = 0
   }
+
   if (geekgeekrunEditVersion < APP_GEEKGEEKRUN_EDIT_VERSION) {
     isNeedExtractEditThisCookie = true
   }
+
   const isExtractDoneFlagFilePath = path.join(editThisCookieExtensionPath, 'EXTRACT_DONE')
   if (
     !isNeedExtractEditThisCookie && 
@@ -54,6 +60,7 @@ export async function ensureEditThisCookie () {
   ) {
     isNeedExtractEditThisCookie = true
   }
+
   if (isNeedExtractEditThisCookie) {
     if (
       fs.existsSync(

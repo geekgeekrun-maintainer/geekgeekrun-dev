@@ -6,12 +6,15 @@ export const AUTO_CHAT_ERROR_EXIT_CODE = (() => {
     ERR_INTERNET_DISCONNECTED: 83,
     ACCESS_IS_DENIED: 84,
     PUPPETEER_IS_NOT_EXECUTABLE: 85
-  }
+  } as const
+  
+  const result: Record<string, number | string> & Record<number, string> = { ...enums }
+  
   const kvList = Object.entries(enums)
   
   kvList.forEach(([k, v]) => {
-    enums[v] = k
+    result[v] = k
   })
 
-  return enums
+  return result as typeof enums & Record<number, string>
 })()

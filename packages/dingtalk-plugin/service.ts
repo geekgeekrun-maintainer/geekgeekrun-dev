@@ -1,4 +1,4 @@
-export function createTextMessage (text) {
+export function createTextMessage(text: string) {
   return {
     "dingtalkRequestBody": {
       "msgtype": "text",
@@ -10,7 +10,7 @@ export function createTextMessage (text) {
   }
 }
 
-export async function requestDingtalkNotify (dingTalkAccessToken, body) {
+export async function requestDingtalkNotify(dingTalkAccessToken: string, body: string) {
   const url = new URL(`https://oapi.dingtalk.com/robot/send`)
   url.searchParams.append(
     'access_token',

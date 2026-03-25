@@ -1,10 +1,11 @@
-import { readConfigFile } from './runtime-file-utils.mjs'
-import { sleep } from "@geekgeekrun/utils/sleep.mjs"
+import { readConfigFile } from './runtime-file-utils'
+import { sleep } from "@geekgeekrun/utils"
+
 let {
   isSageTimeEnabled,
   sageTimeOpTimes,
   sageTimePauseMinute,
-} = readConfigFile('boss.json')
+} = readConfigFile('boss.json') as any
 isSageTimeEnabled = isSageTimeEnabled ?? true
 sageTimeOpTimes =
   isNaN(parseInt(sageTimeOpTimes)) ||
@@ -22,10 +23,14 @@ if (parseFloat(sageTimePauseMinute) === 0) {
 
 let totalEnabledTimes = 0
 let recordedOpCount = 0
+
 export const waitForSageTimeOrJustContinue = async ({
   tag,
   hooks,
-} = {}) => {
+}: {
+  tag?: string
+  hooks?: any
+} = {}): Promise<void> => {
   if (!isSageTimeEnabled) {
     return
   }

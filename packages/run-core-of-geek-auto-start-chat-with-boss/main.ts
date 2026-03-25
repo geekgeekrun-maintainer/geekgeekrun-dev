@@ -1,23 +1,16 @@
-import DingtalkPlugin from '@geekgeekrun/dingtalk-plugin/index.mjs'
-import { mainLoop, closeBrowserWindow } from '@geekgeekrun/geek-auto-start-chat-with-boss/index.mjs'
+import { DingtalkPlugin } from '@geekgeekrun/dingtalk-plugin'
+import { mainLoop, closeBrowserWindow } from '@geekgeekrun/geek-auto-start-chat-with-boss'
 import {
   SyncHook,
   AsyncSeriesHook
 } from 'tapable'
-import fs from 'node:fs'
-import path from 'node:path'
-import { get__dirname } from '@geekgeekrun/utils/legacy-path.mjs';
-import JSON5 from 'json5'
-import { readConfigFile, readStorageFile, getPublicDbFilePath } from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils.mjs'
-import { sleep } from '@geekgeekrun/utils/sleep.mjs'
+import { readConfigFile, readStorageFile, getPublicDbFilePath } from '@geekgeekrun/geek-auto-start-chat-with-boss/runtime-file-utils'
+import { sleep } from '@geekgeekrun/utils'
 import {
   AUTO_CHAT_ERROR_EXIT_CODE
-} from './enums.mjs'
+} from './enums'
 
-import SqlitePluginModule from '@geekgeekrun/sqlite-plugin'
-const {
-  default: SqlitePlugin
-} = SqlitePluginModule
+import SqlitePlugin from '@geekgeekrun/sqlite-plugin'
 
 const rerunInterval = (() => {
   let v = Number(process.env.MAIN_BOSSGEEKGO_RERUN_INTERVAL)
@@ -35,18 +28,18 @@ process.on('disconnect', () => {
 const bossCookies = readStorageFile('boss-cookies.json')
 const { groupRobotAccessToken: dingTalkAccessToken } = readConfigFile('dingtalk.json')
 
-const initPlugins = (hooks) => {
+const initPlugins = (hooks: any): void => {
   new DingtalkPlugin(dingTalkAccessToken).apply(hooks)
   new SqlitePlugin(getPublicDbFilePath()).apply(hooks)
 }
 
-const main = async () => {
+const main = async (): Promise<void> => {
   if (!bossCookies?.length) {
     console.error('There is no cookies. You can save a copy with EditThisCookie extension.')
     process.exit(AUTO_CHAT_ERROR_EXIT_CODE.COOKIE_INVALID)
   }
   const hooks = {
-    daemonInitialized: new AsyncSeriesHook(),
+    daemonInitialized: new AsyncSeriesHook<[]>() as any,
     puppeteerLaunched: new SyncHook(['browser']),
     pageGotten: new SyncHook(['page']),
     pageLoaded: new SyncHook(),
@@ -54,7 +47,7 @@ const main = async () => {
     userInfoResponse: new AsyncSeriesHook(['userInfo']),
     mainFlowWillLaunch: new AsyncSeriesHook(['args']),
     newChatWillStartup: new AsyncSeriesHook(['positionInfoDetail']),
-    newChatStartup: new AsyncSeriesHook(['positionInfoDetail', 'chatRunningContext']),
+    newChatStartup: new AsyncSeriesHook<string, string>() as any,
     noPositionFoundForCurrentJob: new SyncHook(),
     noPositionFoundAfterTraverseAllJob: new SyncHook(),
     errorEncounter: new SyncHook(['errorInfo']),
@@ -63,7 +56,7 @@ const main = async () => {
     sageTimeExit: new AsyncSeriesHook(['args'])
   }
   initPlugins(hooks)
-  await hooks.daemonInitialized.callAsync()
+  await hooks.daemonInitialized.callAsync(() => {})
   while (true) {
     try {
       await mainLoop(hooks)
